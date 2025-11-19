@@ -95,27 +95,80 @@
         }
 
         #win-terminal {
-            background: rgba(0, 0, 0, 0.85);
-            color: #33ff00;
-            font-family: "Monaco", "Consolas", monospace;
-            font-size: 12px;
-            border: 1px solid #333;
+            background: #ffffff;  
+            color: #000000;       
+            font-family: "Monaco", "Courier New", monospace;
+            font-size: 11px;      
+            border: 1px solid #999;
+            cursor: text;
         }
         #win-terminal .window-content { padding: 10px; overflow-y: auto; }
-        .prompt { color: #fff; margin-right: 8px; }
-        .cmd { color: #ffbd2e; }
-        .output-section { margin-bottom: 15px; }
-        .highlight { color: #fff; font-weight: bold; }
-        
+        #win-terminal .prompt { 
+            color: #000 !important; 
+            text-shadow: none !important;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+        #win-terminal .cmd { 
+            color: #000 !important; 
+            font-weight: normal;
+        }
+        #win-terminal .output-section { margin-bottom: 15px; }
+        #win-terminal .highlight {
+            color: #000 !important;
+            font-weight: bold;
+        }
+
+        #win-terminal .window-content::-webkit-scrollbar,
+        #win-textedit .window-content::-webkit-scrollbar,
+        #win-finder .finder-content::-webkit-scrollbar {
+            width: 15px;
+            background: #f4f4f4;
+            border-left: 1px solid #e0e0e0;
+        }
+
+        #win-terminal .window-content::-webkit-scrollbar-thumb,
+        #win-textedit .window-content::-webkit-scrollbar-thumb,
+        #win-finder .finder-content::-webkit-scrollbar-thumb {
+            border: 3px solid transparent;
+            background-clip: content-box;
+            border-radius: 9px;
+            
+            background-image: linear-gradient(to right, 
+                #9bc9f8 0%, 
+                #3b95e6 45%, 
+                #1663b7 100%);
+            box-shadow: inset 0 0 2px rgba(0,0,0,0.1);
+        }
+
+        #win-terminal .window-content::-webkit-scrollbar-thumb:hover,
+        #win-textedit .window-content::-webkit-scrollbar-thumb:hover,
+        #win-finder .finder-content::-webkit-scrollbar-thumb:hover {
+            background-image: linear-gradient(to right, 
+                #b0d8ff 0%, 
+                #4da6ff 45%, 
+                #1a75d5 100%);
+        }
+
+        #win-terminal .window-content::-webkit-scrollbar-corner,
+        #win-textedit .window-content::-webkit-scrollbar-corner,
+        #win-finder .finder-content::-webkit-scrollbar-corner {
+            background: #f4f4f4;
+        }
+        #win-terminal a {
+            color: #0000EE !important; 
+            text-decoration: underline;
+        }
+
         #term-input {
+            color: #000 !important;
+            caret-color: #000 !important; 
             background: transparent;
             border: none;
-            color: #fff;
-            font-family: "Monaco", "Consolas", monospace;
-            font-size: 12px;
+            font-family: "Monaco", "Courier New", monospace;
+            font-size: 11px;
             outline: none;
             flex-grow: 1;
-            caret-color: #33ff00; 
         }
         .input-line {
             display: flex;
@@ -296,23 +349,25 @@
     </div>
 
     <div class="window active" id="win-terminal" style="top: 60px; left: 40px; width: 600px; height: 380px; z-index: 20;">
-        <div class="title-bar" style="background: #333; border-bottom: 1px solid #000;">
+        <div class="title-bar">
             <div class="window-controls">
                 <div class="control close" onclick="closeWindow('win-terminal')"></div>
                 <div class="control minimize" onclick="minimizeWindow('win-terminal')"></div>
                 <div class="control maximize"></div>
             </div>
-            <div class="window-title" style="color: #bbb;">Terminal — bash — 80x24</div>
+            <div class="window-title">Terminal — bash — 80x24</div>
         </div>
         <div class="window-content" id="terminal-content" onclick="document.getElementById('term-input').focus()">
             <div id="terminal-history">
-                <div class="output-section">
-                    <span class="prompt">vitalii@macbook:~ $</span> <span class="cmd">./show_profile --role</span><br>
-                    > C++ Developer | ARM Reverse Engineer<br>
-                    > Passionate About Optimizing Performance and Security
-                    <br><p></p>
-                    <span style="color: #888;"># Type <span style="color: #fff; font-weight: bold;">help</span> to see available commands</span>
-                </div>
+<div class="output-section">
+    <span class="prompt" style="color: #000;">vitalii@macbook:~ $</span> 
+    <span class="cmd" style="color: #000;">./show_profile --role</span><br>
+    
+    <span style="color: #000;">&gt; C++ Developer | ARM Reverse Engineer</span><br>
+    <span style="color: #000;">&gt; Passionate About Optimizing Performance and Security</span><br>
+    <br>
+    <span style="color: #555;"># Type <span style="color: #000; font-weight: bold;">help</span> to see available commands</span>
+</div>
             </div>
             <div class="input-line">
                 <span class="prompt">vitalii@macbook:~ $</span>
@@ -752,11 +807,14 @@ terminalInput.addEventListener('keydown', function(e) {
 
 function addToHistory(text, isCommand = false) {
     const div = document.createElement('div');
+
     if (isCommand) {
-        div.innerHTML = `<p></p><span class="prompt">vitalii@macbook:~ $</span><span class="cmd">${text}</span>`;
+        div.style.marginBottom = "0px";
+        div.innerHTML = `<span class="prompt">vitalii@macbook:~ $</span><span class="cmd" style="color: #000; font-weight: bold;">${text}</span>`;
     } else {
-        div.innerHTML = text;
-        div.style.color = "#ccc"; 
+        div.style.marginBottom = "8px";
+        div.innerHTML = text; 
+        div.style.color = "#000"; 
     }
     terminalHistory.appendChild(div);
 }
@@ -805,7 +863,7 @@ drwxr-xr-x  root     staff  ..
                  addToHistory(`<div style="white-space: pre; line-height: 1.2;">Name: Vitalii Strashnov
 Role: C++ Developer / Reverse Engineer
 Location: Odesa, Ukraine
-Education: Odessa Mechnikov University, Univ. of Tübingen
+Education: Odessa Mechnikov University, Univ. of Tübingen, Stanford Univ.
 Status: Ready to code`);
              } else {
                  addToHistory('Try: whois vitalii');
@@ -866,20 +924,20 @@ Status: Ready to code`);
             break;
 
         case 'help':
-                    addToHistory(`<div style="white-space: pre; line-height: 1.4; color: #ccc;">
-<span style="color: #fff; font-weight: bold;">GNU bash, version 5.1-release (x86_64-apple-darwin)</span>
+            addToHistory(`<div style="white-space: pre; line-height: 1.4; color: #000;">
+<span style="color: #000; font-weight: bold;">GNU bash, version 5.1-release (x86_64-apple-darwin)</span>
 These shell commands are defined internally. Type 'help' to see this list.
 
-  <span style="color: #33ff00; font-weight: bold;">ls</span>         List directory contents
-  <span style="color: #33ff00; font-weight: bold;">cat</span>        [file] Concatenate and print files
-  <span style="color: #33ff00; font-weight: bold;">whois</span>      [vitalii] Display professional profile
-  <span style="color: #33ff00; font-weight: bold;">clear</span>      Clear the terminal screen
-  <span style="color: #33ff00; font-weight: bold;">date</span>       Display current date and time
-  <span style="color: #33ff00; font-weight: bold;">top</span>        Display running processes (Fake)
-  <span style="color: #33ff00; font-weight: bold;">vim</span>        Text editor (Use at your own risk)
-  <span style="color: #33ff00; font-weight: bold;">sudo</span>       Execute a command as superuser
-  <span style="color: #33ff00; font-weight: bold;">matrix</span>     Wake up, Neo...
-  <span style="color: #33ff00; font-weight: bold;">exit</span>       Close the terminal window
+  <span style="color: #000; font-weight: bold;">ls</span>         List directory contents
+  <span style="color: #000; font-weight: bold;">cat</span>        [file] Concatenate and print files
+  <span style="color: #000; font-weight: bold;">whois</span>      [vitalii] Display professional profile
+  <span style="color: #000; font-weight: bold;">clear</span>      Clear the terminal screen
+  <span style="color: #000; font-weight: bold;">date</span>       Display current date and time
+  <span style="color: #000; font-weight: bold;">top</span>        Display running processes (Fake)
+  <span style="color: #000; font-weight: bold;">vim</span>        Text editor (Use at your own risk)
+  <span style="color: #000; font-weight: bold;">sudo</span>       Execute a command as superuser
+  <span style="color: #000; font-weight: bold;">matrix</span>     Wake up, Neo...
+  <span style="color: #000; font-weight: bold;">exit</span>       Close the terminal window
 </div>`);
             break;
 
