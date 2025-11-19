@@ -125,6 +125,26 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
 
+        #win-simulator { background: #2d2d2d; }
+        #win-simulator .window-content {
+            display: flex; justify-content: center; align-items: center;
+            background: #1e1e1e; height: 100%; padding: 20px;
+        }
+        .iphone-frame {
+            width: 375px; height: 667px; /* iPhone SE/8 Ratio */
+            background: #000;
+            border: 14px solid #111;
+            border-radius: 36px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        .iphone-screen {
+            width: 100%; height: 100%;
+            border: none; background: #fff;
+            display: block;
+        }
+
         #win-finder { background: #f0f0f0; display: flex; flex-direction: column; }
         .finder-body { display: flex; flex-grow: 1; height: 100%; overflow: hidden; }
         .sidebar {
@@ -315,7 +335,29 @@
         </div>
     </div>
 
-<div class="window metal" id="win-game" style="top: 80px; left: 200px; width: 420px; height: 450px; z-index: 60; display: none;">
+    <div class="window metal" id="win-simulator" style="top: 40px; left: 250px; width: 450px; height: 780px; z-index: 70; display: none;">
+        <div class="title-bar">
+            <div class="window-controls">
+                <div class="control close" onclick="closeWindow('win-simulator')"></div>
+                <div class="control minimize" onclick="minimizeWindow('win-simulator')"></div>
+                <div class="control maximize"></div>
+            </div>
+            <div class="window-title">Simulator — iPhone 5 — iOS 5.1.1</div>
+        </div>
+        <div class="window-content">
+            <div class="iphone-frame">
+                <iframe 
+                    class="iphone-screen" 
+                    src="" 
+                    id="simulator-iframe" 
+                    frameborder="0"
+                    allow="autoplay; encrypted-media"
+                ></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="window metal" id="win-game" style="top: 80px; left: 200px; width: 420px; height: 450px; z-index: 60; display: none;">
         <div class="title-bar">
             <div class="window-controls">
                 <div class="control close" onclick="closeWindow('win-game')"></div>
@@ -405,9 +447,15 @@
 
     <div id="dock-container">
         <div id="dock">
-<div class="dock-item running" onclick="activateWindow('win-finder')">
+            <div class="dock-item running" onclick="activateWindow('win-finder')">
                 <img src="icons/finder.png" class="dock-icon-img">
                 <div class="dock-tooltip">Finder</div>
+                <div class="dock-dot"></div>
+            </div>
+
+            <div class="dock-item" id="dock-simulator" onclick="openSimulator()">
+                <img src="icons/xcode-simulator.png" class="dock-icon-img">
+                <div class="dock-tooltip">Xcode Simulator</div>
                 <div class="dock-dot"></div>
             </div>
 
@@ -497,6 +545,7 @@
         if(element.id === 'win-textedit') appName = "TextEdit";
         if(element.id === 'win-preview') appName = "Preview";
         if(element.id === 'win-game') appName = "Snake Byte";
+        if(element.id === 'win-simulator') appName = "Xcode Simulator";
         document.getElementById('app-name').innerText = appName;
         windows.forEach(w => w.classList.remove('active'));
         element.classList.add('active');
@@ -506,6 +555,12 @@
         const win = document.getElementById(id);
         win.style.opacity = 0;
         win.style.transform = 'scale(0.9)';
+        
+        if(id === 'win-simulator') {
+            document.getElementById('dock-simulator').classList.remove('running');
+            setTimeout(() => { document.getElementById('simulator-iframe').src = ""; }, 200); 
+        }        
+        
         if(id === 'win-game') { stopGame(); document.getElementById('dock-game').classList.remove('running'); }
         setTimeout(() => {
             win.style.display = 'none';
@@ -540,6 +595,17 @@
         img.src = url; titleEl.innerText = title;
         dockItem.style.display = 'flex'; dockItem.classList.add('running');
         activateWindow('win-preview');
+    }
+
+    window.openSimulator = function() {
+        const dock = document.getElementById('dock-simulator');
+        dock.classList.add('running');
+        const iframe = document.getElementById('simulator-iframe');
+        
+        if(!iframe.src || iframe.src === "" || iframe.src === "about:blank") {
+            iframe.src = "https://vitalikobject.github.io/iOS/index.html";
+        }
+        activateWindow('win-simulator');
     }
 
     const canvas = document.getElementById('game-canvas');
