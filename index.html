@@ -102,10 +102,33 @@
             border: 1px solid #333;
         }
         #win-terminal .window-content { padding: 10px; overflow-y: auto; }
-        .prompt { color: #fff; }
+        .prompt { color: #fff; margin-right: 8px; }
         .cmd { color: #ffbd2e; }
         .output-section { margin-bottom: 15px; }
         .highlight { color: #fff; font-weight: bold; }
+        
+        #term-input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: "Monaco", "Consolas", monospace;
+            font-size: 12px;
+            outline: none;
+            flex-grow: 1;
+            caret-color: #33ff00; 
+        }
+        .input-line {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        #terminal-history {
+            margin-bottom: 5px;
+        }
+        .matrix-mode {
+            color: #0f0 !important;
+            text-shadow: 0 0 5px #0f0;
+        }
 
         #win-textedit { background: #fff; }
         #win-textedit .window-content {
@@ -272,7 +295,7 @@
         </div>
     </div>
 
-    <div class="window active" id="win-terminal" style="top: 60px; left: 40px; width: 580px; height: 380px; z-index: 20;">
+    <div class="window active" id="win-terminal" style="top: 60px; left: 40px; width: 590px; height: 380px; z-index: 20;">
         <div class="title-bar" style="background: #333; border-bottom: 1px solid #000;">
             <div class="window-controls">
                 <div class="control close" onclick="closeWindow('win-terminal')"></div>
@@ -281,33 +304,19 @@
             </div>
             <div class="window-title" style="color: #bbb;">Terminal — bash — 80x24</div>
         </div>
-        <div class="window-content">
-            <div class="output-section">
-                <span class="prompt">vitalii@macbook:~ $</span> <span class="cmd">./show_profile --role</span><br>
-                > C++ Developer | ARM Reverse Engineer<br>
-                > Passionate About Optimizing Performance and Security
+        <div class="window-content" id="terminal-content" onclick="document.getElementById('term-input').focus()">
+            <div id="terminal-history">
+                <div class="output-section">
+                    <span class="prompt">vitalii@macbook:~ $</span> <span class="cmd">./show_profile --role</span><br>
+                    > C++ Developer | ARM Reverse Engineer<br>
+                    > Passionate About Optimizing Performance and Security
+                    <br><p></p>
+                    <span style="color: #888;"># Type <span style="color: #fff; font-weight: bold;">help</span> to see available commands</span>
+                </div>
             </div>
-
-            <div class="output-section">
-                <span class="prompt">vitalii@macbook:~ $</span> <span class="cmd">cat skills.txt</span><br>
-                <span class="highlight">[HARD SKILLS]</span><br>
-                * C++ Development (High Perf)<br>
-                * Reverse Engineering (x86 & ARM)<br>
-                * Malware Analysis & Assembly<br>
-                * Operations Research & Algorithms<br>
-                * Social Network Analysis<br>
-                <br>
-                <span class="highlight">[LANGUAGES]</span><br>
-                * Ukrainian (Native)<br>
-                * Russian (Native)<br>
-                * English (Full Professional)<br>
-                * German (Limited Working)
-            </div>
-
-            <div class="output-section">
-                <span class="prompt">vitalii@macbook:~ $</span> <span class="cmd">ping -c 1 linkedin.com</span><br>
-                REPLY from: <a href="https://www.linkedin.com/in/vitalii-strashnov" target="_blank" style="color:#33ff00;">linkedin.com/in/vitalii-strashnov</a><br>
-                <span class="prompt">vitalii@macbook:~ $</span> <span class="cursor">_</span>
+            <div class="input-line">
+                <span class="prompt">vitalii@macbook:~ $</span>
+                <input type="text" id="term-input" autocomplete="off" spellcheck="false" autofocus>
             </div>
         </div>
     </div>
@@ -715,6 +724,182 @@
         }
     });
 </script>
+<script>
+const terminalInput = document.getElementById('term-input');
+const terminalHistory = document.getElementById('terminal-history');
+const terminalContent = document.getElementById('terminal-content');
 
+const fileSystem = {
+    'skills.txt': '[HARD SKILLS]\n* C++ (STL, Boost)\n* Reverse Engineering (IDA Pro, Ghidra)\n* ASM (x86, ARM64)',
+    'contacts.txt': 'Email: mrkovalyskiy@gmail.com\nLinkedIn: linkedin.com/in/vitalii-strashnov',
+    'secrets.sh': 'Access Denied: Root privileges required.',
+    'projects.md': 'Check out the "Documents" folder in Finder GUI for details.'
+};
+
+terminalInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        const input = this.value;
+        const command = input.trim().split(' ')[0].toLowerCase();
+        const args = input.trim().split(' ').slice(1);
+        
+        addToHistory(input, true);
+        processCommand(command, args);
+        
+        this.value = '';
+        terminalContent.scrollTop = terminalContent.scrollHeight;
+    }
+});
+
+function addToHistory(text, isCommand = false) {
+    const div = document.createElement('div');
+    if (isCommand) {
+        div.innerHTML = `<p></p><span class="prompt">vitalii@macbook:~ $</span><span class="cmd">${text}</span>`;
+    } else {
+        div.innerHTML = text;
+        div.style.color = "#ccc"; 
+    }
+    terminalHistory.appendChild(div);
+}
+
+function processCommand(cmd, args) {
+    switch(cmd) {
+        case 'ls':
+            if (args.includes('-la') || args.includes('-a')) {
+                addToHistory(`<div style="white-space: pre; line-height: 1.2;">drwxr-xr-x  vitalii  staff  .
+drwxr-xr-x  root     staff  ..
+-rw-r--r--  vitalii  staff  .bash_history
+-rw-r--r--  vitalii  staff  .vimrc
+-rw-r--r--  vitalii  staff  skills.txt
+-rw-r--r--  vitalii  staff  contacts.txt
+-rwx------  vitalii  staff  secrets.sh</div>`);
+            } else {
+                addToHistory('skills.txt&nbsp;&nbsp;&nbsp;contacts.txt&nbsp;&nbsp;&nbsp;secrets.sh&nbsp;&nbsp;&nbsp;projects.md');
+            }
+            break;
+
+        case 'cat':
+            if (args.length === 0) {
+                addToHistory('Usage: cat [filename]');
+            } else {
+                const fileName = args[0];
+                if (fileSystem[fileName]) {
+                    addToHistory(fileSystem[fileName].replace(/\n/g, '<br>'));
+                } else if (fileName === '/dev/urandom') {
+                    addToHistory('X}k_@... (Just kidding, not crashing your browser)');
+                } else {
+                    addToHistory(`cat: ${fileName}: No such file or directory`);
+                }
+            }
+            break;
+
+        case 'clear':
+            terminalHistory.innerHTML = '';
+            break;
+
+        case 'whoami':
+            addToHistory('root (just kidding, you are a guest)');
+            break;
+            
+        case 'whois':
+             if (args[0] === 'vitalii') {
+                 addToHistory(`<div style="white-space: pre; line-height: 1.2;">Name: Vitalii Strashnov
+Role: C++ Developer / Reverse Engineer
+Location: Odesa, Ukraine
+Education: Odessa Mechnikov University, Univ. of Tübingen
+Status: Ready to code`);
+             } else {
+                 addToHistory('Try: whois vitalii');
+             }
+             break;
+
+        case 'sudo':
+            if (args[0] === 'rm' && args.includes('-rf') && args.includes('/')) {
+                 addToHistory('<span style="color:red; font-weight:bold;">WARNING: DELETING SYSTEM32... </span>');
+                 setTimeout(() => addToHistory('<span style="color:red;">KERNEL PANIC. Just kidding. Please hire me, don\'t delete me.</span>'), 1000);
+            } else {
+                addToHistory('vitalii is not in the sudoers file. This incident will be reported.');
+            }
+            break;
+
+        case 'vim':
+        case 'vi':
+            addToHistory('<span style="color:#ffff00">Entering Vim...</span><br>...<br>...<br><span style="color: #ff5f57">Error: User does not know how to exit Vim. Rebooting mental state.</span>');
+            break;
+        
+        case 'emacs':
+            addToHistory('Vim is better. Fight me.');
+            break;
+
+        case 'top':
+        case 'htop':
+            addToHistory(`<div style="white-space: pre; line-height: 1.2;">PID   USER      PR  NI  VIRT   RES   SHR S  %CPU %MEM  TIME+   COMMAND
+1337  vitalii   20   0  8G     4G    2G  R  99.9 10.0  999:99  <span style="color:#33ff00">cpp_compilation</span>
+1001  vitalii   20   0  4G     1G    0G  S  10.5  2.0  12:00   ida_pro_analysis
+0001  root      20   0  12M    2M    1M  S   0.1  0.1   0:01   init`);
+            break;
+
+        case 'matrix':
+            const terminalWin = document.getElementById('win-terminal');
+            terminalWin.style.transition = "all 1s";
+            terminalWin.style.background = "rgba(0, 0, 0, 0.95)";
+            document.querySelectorAll('.prompt, .cmd, .highlight').forEach(el => el.classList.add('matrix-mode'));
+            addToHistory('Wake up, Neo...');
+            setTimeout(() => addToHistory('The Matrix has you...'), 2000);
+            setTimeout(() => {
+                addToHistory('Follow the white rabbit.');
+                setTimeout(() => {
+                   document.querySelectorAll('.matrix-mode').forEach(el => el.classList.remove('matrix-mode'));
+                }, 3000);
+            }, 4000);
+            break;
+            
+        case 'make':
+            if (args.includes('coffee')) {
+                addToHistory('make: *** No rule to make target `coffee`.  Stop. (I am a teapot 418)');
+            } else {
+                addToHistory('make: *** No targets specified and no makefile found. Stop.');
+            }
+            break;
+            
+        case 'exit':
+            window.closeWindow('win-terminal');
+            break;
+
+        case 'help':
+                    addToHistory(`<div style="white-space: pre; line-height: 1.4; color: #ccc;">
+        <span style="color: #fff; font-weight: bold;">GNU bash, version 5.1-release (x86_64-apple-darwin)</span>
+        These shell commands are defined internally. Type 'help' to see this list.
+
+          <span style="color: #33ff00; font-weight: bold;">ls</span>         List directory contents
+          <span style="color: #33ff00; font-weight: bold;">cat</span>        [file] Concatenate and print files
+          <span style="color: #33ff00; font-weight: bold;">whois</span>      [vitalii] Display professional profile
+          <span style="color: #33ff00; font-weight: bold;">clear</span>      Clear the terminal screen
+          <span style="color: #33ff00; font-weight: bold;">date</span>       Display current date and time
+          <span style="color: #33ff00; font-weight: bold;">top</span>        Display running processes (Fake)
+          <span style="color: #33ff00; font-weight: bold;">vim</span>        Text editor (Use at your own risk)
+          <span style="color: #33ff00; font-weight: bold;">sudo</span>       Execute a command as superuser
+          <span style="color: #33ff00; font-weight: bold;">matrix</span>     Wake up, Neo...
+          <span style="color: #33ff00; font-weight: bold;">exit</span>       Close the terminal window
+        </div>`);
+            break;
+
+        default:
+            if (cmd !== '') {
+                addToHistory(`-bash: ${cmd}: command not found`);
+            }
+    }
+}
+
+const termWin = document.getElementById('win-terminal');
+const termInp = document.getElementById('term-input');
+
+termWin.addEventListener('click', function(e) {
+    if (e.target.closest('.window-controls')) return;
+
+    if (termInp) {
+        termInp.focus();
+    }
+});
+</script>
 </body>
 </html>
