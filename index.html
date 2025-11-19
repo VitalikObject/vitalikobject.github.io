@@ -898,15 +898,40 @@ Status: Ready to code`);
 
         case 'matrix':
             const terminalWin = document.getElementById('win-terminal');
-            terminalWin.style.transition = "all 1s";
-            terminalWin.style.background = "rgba(0, 0, 0, 0.95)";
-            document.querySelectorAll('.prompt, .cmd, .highlight').forEach(el => el.classList.add('matrix-mode'));
-            addToHistory('Wake up, Neo...');
-            setTimeout(() => addToHistory('The Matrix has you...'), 2000);
+            const inputField = document.getElementById('term-input');
+            
+            terminalWin.style.transition = "background 0.5s ease";
+            terminalWin.style.background = "#000000"; 
+            
+            const elementsToColor = document.querySelectorAll('#terminal-history div, .prompt, .cmd, #term-input');
+            elementsToColor.forEach(el => {
+                el.style.setProperty('color', '#00ff00', 'important');
+                el.style.textShadow = "0 0 5px #00ff00"; 
+            });
+            
+            inputField.style.setProperty('caret-color', '#00ff00', 'important');
+
+            addToHistory('<span style="color:#00ff00; text-shadow:0 0 5px #00ff00;">Wake up, Neo...</span>');
+            
             setTimeout(() => {
-                addToHistory('Follow the white rabbit.');
+                addToHistory('<span style="color:#00ff00; text-shadow:0 0 5px #00ff00;">The Matrix has you...</span>');
+            }, 2000);
+            
+            setTimeout(() => {
+                addToHistory('<span style="color:#00ff00; text-shadow:0 0 5px #00ff00;">Follow the white rabbit.</span>');
+                
                 setTimeout(() => {
-                   document.querySelectorAll('.matrix-mode').forEach(el => el.classList.remove('matrix-mode'));
+                    terminalWin.style.background = "#ffffff";
+                    
+                    const allElements = document.querySelectorAll('#terminal-history div, .prompt, .cmd, #term-input');
+                    allElements.forEach(el => {
+                        el.style.removeProperty('color');
+                        el.style.removeProperty('text-shadow');
+                    });
+                    
+                    inputField.style.removeProperty('caret-color');
+                    
+                    addToHistory('<span style="color: #666;">Connection lost...</span>');
                 }, 3000);
             }, 4000);
             break;
