@@ -966,6 +966,50 @@ These shell commands are defined internally. Type 'help' to see this list.
 </div>`);
             break;
 
+        case 'ozzy':
+        case 'sabbath':
+            addToHistory(`<div style="white-space: pre; line-height: 1.2; color: #000; font-size: 10px;">
+    =/\\                 /\\=
+    / \\'._   (\\_/)   _.'/ \\
+   / .''._'--(o.o)--'_.''. \\
+  /.' _/ |\`'=/ " \\='\`| \\_ \`.\\
+ /\` .' \`\\;-,'\\___/',-;/ \` '. '\\
+/.-'       \`\\(-V-)/\`       \`-.\\
+\`            "   "            \`
+</div>`);
+            
+            setTimeout(() => {
+                 addToHistory('<span style="font-weight: bold; font-size: 12px; color: #000;">ALL ABOARD! HAHAHAHA! 🚂</span>');
+            }, 600);
+
+            setTimeout(() => {
+                addToHistory('<div style="margin-bottom: 12px;"><br><span style="color: #cc0000; font-weight: bold;">[FATAL ERROR] HeadlessException: Bat head not found.</span><br><span style="color: #666;">Core dumped at Des Moines Veterans Memorial Auditorium (1982)...</span></div>');
+            }, 1600);
+            
+            setTimeout(() => {
+                addToHistory(`<div style="white-space: pre; line-height: 10px; font-size: 9px; color: #000; font-weight: bold;">
+                     #@@@@@*                          @@@@@       @@@@@          
+                   *#           +%                     @@@   @     #   @           
+                 %.     .*#*:   @@@@@@@@@@@@@ :@@@@@@@@@@@@   @   +   @            
+                @    #@@@@@@@@@@.         =@@++         .@@@   @:-   @             
+               @    @@@*      :@@@@@@@   #@@@@@@@@@@-  -@@@@*       %              
+              @    @@@         %@@@@@   @@@ #@@@@@@   *@ @@@@+     %               
+           +@@%   #@@@@@        .@@@   @@@@    @@@   =@@@ @@@@-   %@@@@            
+          +=         %@@@      ++       .@%  .%        *  @          @             
+          @@@@@   #@@@@@+      @@+   @@@@=   @@@   @@@#  @@@@@*   @@@              
+            @@@*   @@@@.       --  .@@@@     @*   @@@+  %@@@@@*   @                
+               -+   @@*       #.   ########@@=   *#######%@ @@*   @                
+                 @    =@@=.:%@            :@             @  @@*   @                
+                   *         @@@@@@@@@@@@@@@@@@@@@@@@@@@=   @@*   @                
+                     +@*-.  .#@@@@@++++++++++++++++++++     @@#   @                
+                          =#%#=.                            @@@@@=                   
+</div>`);
+            }, 2200);
+            
+            setTimeout(() => {
+                 addToHistory('<span style="font-weight: bold; font-size: 12px; color: #000;">RIP 1948 - 2025</span>');                          
+            }, 2400);
+            break;
         default:
             if (cmd !== '') {
                 addToHistory(`-bash: ${cmd}: command not found`);
