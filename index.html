@@ -315,7 +315,135 @@
         .game-score { position: absolute; top: 10px; right: 15px; color: #33ff00; font-family: "Courier New", monospace; font-size: 16px; font-weight: bold; z-index: 10; text-shadow: 0 0 5px rgba(51,255,0,0.5); }
         .game-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: "Monaco", monospace; z-index: 20; text-align: center; }
         .game-btn { margin-top: 20px; padding: 10px 20px; border: 1px solid #fff; cursor: pointer; transition: background 0.2s; }
-        .game-btn:hover { background: rgba(255,255,255,0.2); }        
+        .game-btn:hover { background: rgba(255,255,255,0.2); }     
+        
+        /* Xcode Styles */
+        .xcode-toolbar {
+            height: 55px;
+            background: linear-gradient(to bottom, #e8e8e8 0%, #cfcfcf 100%);
+            border-bottom: 1px solid #888;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+            gap: 10px;
+        }
+        .tool-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; padding: 2px 8px; border-radius: 4px;
+        }
+        .tool-btn:hover { background: rgba(0,0,0,0.05); }
+        .tool-btn:active { background: rgba(0,0,0,0.15); box-shadow: inset 0 1px 3px rgba(0,0,0,0.2); }
+        .tool-icon { font-size: 20px; margin-bottom: 2px; filter: drop-shadow(0 1px 1px rgba(255,255,255,0.8)); }
+        .tool-label { font-size: 10px; color: #333; font-weight: bold; text-shadow: 0 1px 0 rgba(255,255,255,0.5); }
+        .tool-group { display: flex; gap: 5px; }
+        .tool-sep { width: 1px; height: 40px; background: #999; border-right: 1px solid #eee; margin: 0 5px; }
+        .tool-center { display: flex; flex-direction: column; gap: 3px; flex-grow: 1; max-width: 200px; }
+        .xcode-select { font-size: 10px; border-radius: 3px; background: linear-gradient(#fff, #eee); border: 1px solid #888; }
+        .xcode-search { 
+            border-radius: 10px; border: 1px solid #888; padding: 3px 8px; font-size: 11px; 
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); outline: none; width: 150px;
+        }
+
+        .xcode-body { display: flex; flex-grow: 1; height: calc(100% - 77px); background: #fff; }
+        
+        .xcode-sidebar {
+            width: 220px;      
+            min-width: 220px;  
+            max-width: 220px;  
+            flex-shrink: 0;   
+            background: #dde4eb; 
+            border-right: 1px solid #aebcd0;
+            overflow-y: auto; 
+            overflow-x: hidden; 
+            font-size: 11px; 
+            font-family: "Lucida Grande", sans-serif;
+        }
+        .xcode-header-row {
+            background: linear-gradient(to bottom, #fff 0%, #e2e2e2 100%);
+            padding: 3px 8px; border-bottom: 1px solid #ccc; color: #333; font-weight: bold;
+        }
+        .x-tree-item { padding: 2px 5px; cursor: pointer; white-space: nowrap; color: #000; display: flex; align-items: center; }
+        .x-tree-item:hover { background: rgba(255,255,255,0.5); }
+        .x-tree-item.active { 
+            background: linear-gradient(to bottom, #5c92d8 0%, #3d75b9 100%); 
+            color: white; border-top: 1px solid #5183c0;
+        }
+        .x-tree-item.indent { padding-left: 20px; }
+        .x-tree-item.indent-2 { padding-left: 35px; }
+
+        .xcode-editor-area { flex-grow: 1; display: flex; flex-direction: column; background: #fff; }
+        .editor-nav-bar {
+            height: 18px; background: #f0f0f0; border-bottom: 1px solid #ccc;
+            font-size: 10px; display: flex; align-items: center; padding: 0 5px; color: #333;
+        }
+        .editor-container { display: flex; flex-grow: 1; overflow: hidden; position: relative; }
+        .line-numbers {
+            width: 35px; background: #f0f0f0; border-right: 1px solid #ddd;
+            text-align: right; padding: 5px 5px 5px 0; color: #888; font-family: "Monaco", monospace; font-size: 11px; line-height: 16px; user-select: none;
+        }
+        .code-content {
+            flex-grow: 1; padding: 5px; font-family: "Monaco", monospace; font-size: 11px; line-height: 16px;
+            outline: none; white-space: pre; overflow: auto; color: #000;
+        }
+        
+        .code-content b { color: #aa0d91; font-weight: normal; } 
+        .code-content i { color: #007400; font-style: normal; } 
+        .code-content u { color: #78492a; text-decoration: none; } 
+        .code-content s { color: #c41a16; text-decoration: none; } 
+        
+        .xcode-main-area {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .xcode-editor-area {
+            flex-grow: 2; 
+            display: flex;
+            flex-direction: column;
+            border-bottom: 1px solid #ccc;
+            min-height: 200px;
+        }
+
+        .xcode-console {
+            flex-grow: 1;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100px;
+            max-height: 200px;
+        }
+
+        .console-header {
+            background: #e8e8e8;
+            border-bottom: 1px solid #ccc;
+            padding: 2px 10px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .console-output {
+            flex-grow: 1;
+            padding: 5px;
+            font-family: "Monaco", "Courier New", monospace;
+            font-size: 10px;
+            overflow-y: auto;
+            color: #333;
+            white-space: pre-wrap;
+            background: #fff;
+        }
+        
+        .code-content .cpp-keyword { color: #aa0d91; font-weight: bold; }
+        .code-content .cpp-string { color: #c41a16; }
+        .code-content .cpp-comment { color: #007400; }
+        .code-content .cpp-include { color: #78492a; }
+        .code-content .cpp-type { color: #3e6d74; font-weight: bold; }
+        .code-content .cpp-number { color: #1c00cf; }
+        
     </style>
     <script type="text/javascript">
       var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -519,12 +647,89 @@
             </div>
         </div>
     </div>
+    
+<div class="window metal" id="win-xcode" style="top: 70px; left: 80px; width: 800px; height: 600px; z-index: 25; display: none;">
+        <div class="title-bar">
+            <div class="window-controls">
+                <div class="control close" onclick="closeWindow('win-xcode')"></div>
+                <div class="control minimize" onclick="minimizeWindow('win-xcode')"></div>
+                <div class="control maximize"></div>
+            </div>
+            <div class="window-title">main.cpp — CppProject</div>
+        </div>
+        
+        <div class="xcode-toolbar">
+            <div class="tool-group">
+                <div class="tool-btn" onclick="runCppCode()">
+                    <div class="tool-icon">🔨</div>
+                    <div class="tool-label">Build</div>
+                </div>
+                <div class="tool-btn" onclick="runCppCode()">
+                    <div class="tool-icon" style="color: #28c940;">▶️</div>
+                    <div class="tool-label">Build & Go</div>
+                </div>
+                <div class="tool-btn">
+                    <div class="tool-icon">🐞</div>
+                    <div class="tool-label">Debug</div>
+                </div>
+            </div>
+            <div class="tool-sep"></div>
+            <div class="tool-center">
+                <select class="xcode-select"><option>Debug | x86_64</option><option>Release | x86_64</option></select>
+                <div style="font-size:10px; color:#555; text-align:center;">Target: WebAssembly</div>
+            </div>
+        </div>
+
+        <div class="xcode-body">
+            <div class="xcode-sidebar">
+                <div class="xcode-header-row">Project Explorer</div>
+                <div class="x-tree-item open">▼ 📦 CppProject</div>
+                <div class="x-tree-item indent">▼ 📁 src</div>
+                <div class="x-tree-item indent-2 active">📄 main.cpp</div>
+                <div class="x-tree-item indent-2">📄 utils.cpp</div>
+                <div class="x-tree-item indent-2">📄 utils.h</div>
+                <div class="x-tree-item indent">📁 include</div>
+                <div class="x-tree-item indent">📄 CMakeLists.txt</div>
+                <div class="x-tree-item indent">📄 Makefile</div>
+                <div class="x-tree-item">📁 build</div>
+                <div class="x-tree-item">⚙️ External Libs</div>
+            </div>
+
+            <div class="xcode-main-area">
+                <div class="xcode-editor-area">
+                    <div class="editor-nav-bar">
+                         📄 main.cpp : 1 &nbsp;&nbsp; int main()
+                    </div>
+                    <div class="editor-container">
+                        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15</div>
+                        <div class="code-content" contenteditable="true" spellcheck="false" id="xcode-code"></div>
+                    </div>
+                </div>
+
+                <div class="xcode-console" id="xcode-console">
+                    <div class="console-header">
+                        <span>Debugger Console</span>
+                        <span style="float:right; cursor:pointer;" onclick="document.getElementById('console-output').innerHTML=''">Clear</span>
+                    </div>
+                    <div class="console-output" id="console-output">
+                        <span style="color:#888;">Ready to build. Target: x86 (Clang)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="dock-container">
         <div id="dock">
             <div class="dock-item running" onclick="activateWindow('win-finder')">
                 <img src="icons/finder.png" class="dock-icon-img">
                 <div class="dock-tooltip">Finder</div>
+                <div class="dock-dot"></div>
+            </div>
+
+            <div class="dock-item" id="dock-xcode" onclick="openXcode()">
+                <img src="icons/xcode.png" class="dock-icon-img" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Xcode_icon.svg/1024px-Xcode_icon.svg.png'">
+                <div class="dock-tooltip">Xcode</div>
                 <div class="dock-dot"></div>
             </div>
 
@@ -1027,6 +1232,109 @@ termWin.addEventListener('click', function(e) {
         termInp.focus();
     }
 });
+</script>
+<script>
+    const cppTemplate = `#include <iostream>  
+
+int main() {
+    std::cout << "Hello, World!" << std::endl;  
+    return 0;  
+}
+`;
+
+    const codeEditor = document.getElementById('xcode-code');
+    const consoleOutput = document.getElementById('console-output');
+
+    window.openXcode = function() {
+        const dock = document.getElementById('dock-xcode');
+        dock.classList.add('running');
+        activateWindow('win-xcode');
+        
+        if(codeEditor.innerText.trim() === "") {
+            codeEditor.innerText = cppTemplate;
+            codeEditor.innerHTML = highlightCpp(codeEditor.innerText);
+        }
+    }
+
+    function logConsole(text, color = "#000") {
+        const line = document.createElement('div');
+        line.style.color = color;
+        line.innerText = text;
+        consoleOutput.appendChild(line);
+        consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    }
+
+    window.runCppCode = function() {
+        consoleOutput.innerHTML = "";
+        const code = codeEditor.innerText;
+        
+        logConsole("Compiling...", "#555");
+
+        const data = {
+            "code": code,
+            "compiler": "gcc-head", 
+            "save": false
+        };
+
+        fetch("https://wandbox.org/api/compile.json", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.compiler_error || result.program_error) {
+                logConsole("\n[COMPILATION ERROR]", "#cc0000");
+                logConsole(result.compiler_error || result.program_error, "#cc0000");
+            } else {
+                logConsole("\n" + result.program_output, "#000");
+                logConsole("\nProgram exited with code " + result.status, "#555");
+            }
+        })
+        .catch(error => {
+                logConsole("\n[COMPILATION ERROR]", "#cc0000");
+        });
+    }
+
+    function highlightCpp(text) {
+        let safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        
+        const tokens = [];
+        const tokenPlaceholder = (i) => `___TOKEN${i}___`;
+
+        safeText = safeText.replace(/(\/\/.*)|(".*?")/g, function(match, comment, string) {
+            const className = comment ? "cpp-comment" : "cpp-string";
+            const token = tokenPlaceholder(tokens.length);
+            tokens.push(`<span class="${className}">${match}</span>`);
+            return token;
+        });
+
+        safeText = safeText.replace(/\b(int|void|return|auto|const|char|double|bool|for|while|if|else|include|define|using|namespace)\b/g, '<span class="cpp-keyword">$1</span>');
+        safeText = safeText.replace(/(&lt;[^&]+&gt;)/g, '<span class="cpp-include">$1</span>');
+        safeText = safeText.replace(/(#\w+)/g, '<span class="cpp-include">$1</span>');
+        safeText = safeText.replace(/\b(std::|cout|endl|vector|string|sort|map)\b/g, '<span class="cpp-type">$1</span>');
+        safeText = safeText.replace(/\b(\d+)\b/g, '<span class="cpp-number">$1</span>');
+
+        tokens.forEach((tokenValue, index) => {
+            safeText = safeText.replace(tokenPlaceholder(index), tokenValue);
+        });
+
+        return safeText;
+    }
+
+    codeEditor.addEventListener('blur', function() {
+         const currentText = codeEditor.innerText;
+         codeEditor.innerHTML = highlightCpp(currentText);
+    });
+    
+    codeEditor.addEventListener('paste', function(e) {
+        e.preventDefault();
+        var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+        document.execCommand("insertHTML", false, text);
+    });
+</script>
+
+
 </script>
 </body>
 </html>
