@@ -1,417 +1,636 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900"
-      rel="stylesheet"
-    />
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Vitalii Strashnov - OS X Portfolio</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: "Lucida Grande", "Segoe UI", Helvetica, Arial, sans-serif;
+            user-select: none;
+            background-color: #000;
+        }
 
-    <title>Mr Vitalik</title>
-	<link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+        #desktop {
+            width: 100%; height: 100%;
+            background: url('wallpaper/fish.jpg') no-repeat center center fixed;    
+            background-size: cover;
+            position: relative; display: flex; flex-direction: column; justify-content: space-between;
+        }
 
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        #menubar {
+            height: 22px;
+            background: linear-gradient(to bottom, rgba(230,230,230,0.95) 0%, rgba(180,180,180,0.95) 100%);
+            border-bottom: 1px solid #555;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 13px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            z-index: 3000;
+            color: #222;
+        }
+        .menu-left, .menu-right { display: flex; gap: 15px; }
+        .apple-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;        
+            padding-right: 15px;  
+            cursor: pointer;
+        }
 
-    <link rel="stylesheet" href="assets/css/fontawesome.css" />
-    <link rel="stylesheet" href="assets/css/templatemo-style.css" />
-    <link rel="stylesheet" href="assets/css/owl.css" />
-    <link rel="stylesheet" href="assets/css/lightbox.css" />
-  </head>
+        .apple-logo img {
+            height: 14px;         
+            width: auto;          
+            opacity: 0.9;         
+        }
+        .menu-item { font-weight: bold; cursor: pointer; text-shadow: 0 1px 0 rgba(255,255,255,0.5); }
+        .menu-item span { font-weight: normal; }
 
-  <body>
-    <div id="page-wraper">
-      <!-- Sidebar Menu -->
-      <div class="responsive-nav">
-        <i class="fa fa-bars" id="menu-toggle"></i>
-        <div id="menu" class="menu">
-          <i class="fa fa-times" id="menu-close"></i>
-          <div class="container">
-            <div class="image">
-              <a href="#"><img src="assets/images/author-image.jpg" alt="" /></a>
+        .window {
+            position: absolute;
+            border-radius: 5px 5px 0 0;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.1s, opacity 0.2s;
+            overflow: hidden;
+            min-width: 200px;
+            min-height: 100px;
+        }
+        .window.active { box-shadow: 0 20px 60px rgba(0,0,0,0.7); }
+
+        .title-bar {
+            height: 22px;
+            background: linear-gradient(to bottom, #e0e0e0 0%, #b0b0b0 100%);
+            border-bottom: 1px solid #888;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+        }
+        .window.metal .title-bar {
+            background: linear-gradient(to bottom, #dcdcdc 0%, #b0b0b0 100%);
+        }
+        .window-controls { display: flex; gap: 6px; }
+        .control {
+            width: 12px; height: 12px; border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.2);
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.5);
+            cursor: pointer;
+        }
+        .close { background: #ff5f57; }
+        .minimize { background: #ffbd2e; }
+        .maximize { background: #28c940; }
+        .window-title {
+            flex-grow: 1; text-align: center; font-size: 12px; color: #333;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.6); margin-right: 40px;
+            pointer-events: none;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        #win-terminal {
+            background: rgba(0, 0, 0, 0.85);
+            color: #33ff00;
+            font-family: "Monaco", "Consolas", monospace;
+            font-size: 12px;
+            border: 1px solid #333;
+        }
+        #win-terminal .window-content { padding: 10px; overflow-y: auto; }
+        .prompt { color: #fff; }
+        .cmd { color: #ffbd2e; }
+        .output-section { margin-bottom: 15px; }
+        .highlight { color: #fff; font-weight: bold; }
+
+        #win-textedit { background: #fff; }
+        #win-textedit .window-content {
+            padding: 20px; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            color: #333; line-height: 1.5; overflow-y: auto;
+        }
+        .paper-header {
+            font-size: 18px; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;
+        }
+
+        #win-preview { background: #444; }
+        #win-preview .window-content {
+            display: flex; justify-content: center; align-items: center;
+            background: #222; height: 100%; overflow: hidden;
+        }
+        #preview-img {
+            max-width: 100%; max-height: 100%; object-fit: contain;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+
+        #win-finder { background: #f0f0f0; display: flex; flex-direction: column; }
+        .finder-body { display: flex; flex-grow: 1; height: 100%; overflow: hidden; }
+        .sidebar {
+            width: 130px; background: #dde4eb; border-right: 1px solid #aebcd0;
+            padding-top: 10px; font-size: 12px; color: #444;
+            display: flex; flex-direction: column; gap: 2px;
+        }
+        .sidebar-item { padding: 5px 15px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .sidebar-item.active { background: #5185c3; color: white; }
+        .sidebar-title { 
+            padding: 5px 10px; font-weight: bold; color: #7a8da5; text-transform: uppercase; font-size: 10px; margin-top: 10px; 
+        }
+        
+        .finder-content {
+            flex-grow: 1; background: #fff; padding: 15px;
+            display: grid; grid-template-columns: repeat(auto-fill, 100px);
+            grid-auto-rows: 100px; align-content: start;
+            overflow-y: auto;
+        }
+        
+        .file-icon {
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center; cursor: pointer; padding: 5px;
+            border-radius: 4px; border: 1px solid transparent;
+        }
+        .file-icon:active, .file-icon.selected {
+            background: #ccc; border: 1px solid #aaa;
+        }
+        .file-icon .ico { font-size: 48px; margin-bottom: 5px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        .file-icon .name { font-size: 11px; line-height: 1.3; word-wrap: break-word; color: #333; width: 90px; }
+
+        #dock-container {
+            height: 90px; display: flex; justify-content: center; align-items: flex-end;
+            margin-bottom: 10px; perspective: 1000px; z-index: 4000;
+        }
+        #dock {
+            background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.4); border-bottom: none;
+            height: 60px; padding: 0 20px; border-radius: 5px 5px 0 0;
+            display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+            transform: rotateX(25deg); transform-origin: bottom center;
+            margin-bottom: -5px;
+        }
+        .dock-item {
+            width: 50px; height: 50px; 
+            transition: transform 0.2s, margin 0.2s;
+            cursor: pointer; position: relative;
+            display: flex; justify-content: center; align-items: center;
+        }
+        
+        .dock-icon-img {
+            width: 100%; height: 100%;
+            object-fit: contain;
+            -webkit-box-reflect: below 5px linear-gradient(transparent, rgba(255,255,255,0.3));
+            pointer-events: none;
+        }
+
+        .dock-item:hover { transform: scale(1.5) translateY(-20px); margin: 0 12px; }
+        
+        .dock-dot {
+            position: absolute; bottom: -8px; width: 5px; height: 5px;
+            background: #aceeff; border-radius: 50%;
+            box-shadow: 0 0 4px #0099ff; display: none;
+            z-index: 10;
+        }
+        .dock-item.running .dock-dot { display: block; }
+
+        .dock-tooltip {
+            position: absolute; top: -45px; left: 50%; transform: translateX(-50%);
+            background: rgba(240,240,240,0.95); color: #333; border: 1px solid #bbb;
+            padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;
+            opacity: 0; pointer-events: none; transition: opacity 0.2s; white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .dock-item:hover .dock-tooltip { opacity: 1; }
+        
+        #win-game { background: #222; }
+        #win-game .window-content { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; background: #000; position: relative; }
+        canvas { border: 2px solid #333; background: #111; box-shadow: 0 0 20px rgba(0,255,0,0.1); }
+        .game-score { position: absolute; top: 10px; right: 15px; color: #33ff00; font-family: "Courier New", monospace; font-size: 16px; font-weight: bold; z-index: 10; text-shadow: 0 0 5px rgba(51,255,0,0.5); }
+        .game-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: "Monaco", monospace; z-index: 20; text-align: center; }
+        .game-btn { margin-top: 20px; padding: 10px 20px; border: 1px solid #fff; cursor: pointer; transition: background 0.2s; }
+        .game-btn:hover { background: rgba(255,255,255,0.2); }        
+    </style>
+</head>
+<body>
+
+<div id="desktop">
+    
+    <div id="menubar">
+        <div class="menu-left">
+            <div class="apple-logo">
+                <img src="icons/apple.png" alt="Apple">
             </div>
-            <div class="author-content">
-              <h4>Mr Vitalik</h4>
-              <span>C# Developer</span>
-            </div>
-            <nav class="main-nav" role="navigation">
-              <ul class="main-menu">
-                <li><a href="#section1">About Me</a></li>
-                <li><a href="#section2">What I’m good at</a></li>
-                <li><a href="#section3">Screenshots</a></li>
-              </ul>
-            </nav>
-            <div class="social-network">
-              <ul class="soial-icons">
-                <li>
-                  <a href="#"
-                    ><i class="fa fa-facebook"></i
-                  ></a>
-                </li>
-                <li>
-                  <a href="#"><i class="fa fa-twitter"></i></a>
-                </li>
-                <li>
-                  <a href="#"><i class="fa fa-linkedin"></i></a>
-                </li>
-                <li>
-                  <a href="#"><i class="fa fa-dribbble"></i></a>
-                </li>
-                <li>
-                  <a href="#"><i class="fa fa-rss"></i></a>
-                </li>
-              </ul>
-            </div>
-            <div class="copyright-text">
-              <p>Copyright <script>document.write(/\d{4}/.exec(Date())[0])</script></p>
-            </div>
-          </div>
+            <div class="menu-item" id="app-name">Terminal</div>
+            <div class="menu-item"><span>File</span></div>
+            <div class="menu-item"><span>Edit</span></div>
+            <div class="menu-item"><span>View</span></div>
+            <div class="menu-item"><span>Window</span></div>
+            <div class="menu-item"><span>Help</span></div>
         </div>
-      </div>
-
-      <section class="section about-me" data-section="section1">
-        <div class="container">
-          <div class="section-heading">
-            <h2>About Me</h2>
-            <div class="line-dec"></div>
-            <span>
-				I have been a server developer and reverse engineer since 2019. 
-				I already have several private servers for games such as Clash of Clans, Clash Royale and Brawl Stars.
-			</span>
-          </div>
-          <div class="left-image-post">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="left-image">
-                  <img src="assets/images/left-image.jpg" alt="" />
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="right-text">
-                  <h4>IDA Pro knowledge</h4>
-                  <p>
-					I have spent many hours learning the assembler and logic of Superecell games. 
-					I've run developer-hidden features or added my own to the game. 
-					I understand machine code well and navigate it easily.
-                  </p>
-                  <div class="white-button">
-                    <a href="#">Read More</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="right-image-post">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="left-text">
-                  <h4>Server development skills</h4>
-                  <p>
-					I have written enough servers to understand the structure and operation. 
-					Some of my servers were used in production and maintained by me. 
-					My servers were among the first to be updated to the latest versions.
-                  </p>
-                  <div class="white-button">
-                    <a href="#">Read More</a>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="right-image">
-                  <img src="assets/images/right-image.jpg" alt="" />
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="menu-right">
+            <div class="menu-item">Vitalii Strashnov</div>
+            <div class="menu-item" id="clock">12:00</div>
+            <div class="menu-item">🔍</div>
         </div>
-      </section>
-
-      <section class="section my-services" data-section="section2">
-        <div class="container">
-          <div class="section-heading">
-            <h2>What I’m good at?</h2>
-            <div class="line-dec"></div>
-            <span
-              >Here are the benefits that I and my servers provide.</span
-            >
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="service-item">
-                <div class="first-service-icon service-icon"></div>
-                <h4>C# &amp; JS</h4>
-                <p>
-					I have good knowledge of several languages: C# and JS. 
-					My servers are written in the C# programming language. 
-					I use JavaScript along with Frida for writing scripts.
-                </p>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="service-item">
-                <div class="second-service-icon service-icon"></div>
-                <h4>Code quality</h4>
-                <p>
-					The quality of my code is important to me. 
-					I frequently rewrite my server functions to create cleaner and faster code.
-					My servers are constantly updated with new versions or security improvements.
-                </p>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="service-item">
-                <div class="third-service-icon service-icon"></div>
-                <h4>Flexible settings</h4>
-                <p>
-					My servers are equipped with a flexible system of settings. 
-					The settings of my servers contain a lot of items for fine tuning.
-					Also the server database is easy to use.
-                </p>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="service-item">
-                <div class="fourth-service-icon service-icon"></div>
-                <h4>Fast performance</h4>
-                <p>
-					My servers are always maintained by me. 
-					I constantly monitor the quality and speed of execution when.
-					All errors and shortcomings are corrected by me very quickly.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section my-work" data-section="section3">
-        <div class="container">
-          <div class="section-heading">
-            <h2>Screenshots</h2>
-            <div class="line-dec"></div>
-            <span>
-				Here you can see screenshots of my work.
-			</span>
-          </div>
-          <div class="row">
-            <div class="isotope-wrapper">
-              <form class="isotope-toolbar">
-                <label
-                  ><input
-                    type="radio"
-                    data-type="*"
-                    checked=""
-                    name="isotope-filter"
-                  />
-                  <span>all</span></label
-                >
-                <label
-                  ><input
-                    type="radio"
-                    data-type="coc"
-                    name="isotope-filter"
-                  />
-                  <span>Clash of Clans</span></label
-                >
-                <label
-                  ><input
-                    type="radio"
-                    data-type="bb"
-                    name="isotope-filter"
-                  />
-                  <span>Boom Beach</span></label
-                >				
-                <label
-                  ><input
-                    type="radio"
-                    data-type="bs"
-                    name="isotope-filter"
-                  />
-                  <span>Brawl Stars</span></label
-                >
-              </form>
-              <div class="isotope-box">
-                <div class="isotope-item" data-type="coc">
-                  <figure class="snip1321">
-                    <img
-                      src="assets/images/portfolio-01.jpg"
-                      alt="sq-sample26"
-                    />
-                    <figcaption>
-                      <a
-                        href="assets/images/portfolio-01.jpg"
-                        data-lightbox="image-1"
-                        data-title="Caption"
-                        ><i class="fa fa-search"></i
-                      ></a>
-                      <h4>Clash of Clans server emulator</h4>
-                      <span>Here is a screenshot from my server.</span>
-                    </figcaption>
-                  </figure>
-                </div>
-
-                <div class="isotope-item" data-type="coc">
-                  <figure class="snip1321">
-                    <img
-                      src="assets/images/portfolio-02.jpg"
-                      alt="sq-sample26"
-                    />
-                    <figcaption>
-                      <a
-                        href="assets/images/portfolio-02.jpg"
-                        data-lightbox="image-1"
-                        data-title="Caption"
-                        ><i class="fa fa-search"></i
-                      ></a>
-                      <h4>Debug Menu in Clash of Clans</h4>
-                      <span>This is the hidden developer menu that I unlocked.</span>
-                    </figcaption>
-                  </figure>
-                </div>
-
-                <div class="isotope-item" data-type="bb">
-                  <figure class="snip1321">
-                    <img
-                      src="assets/images/portfolio-03.jpg"
-                      alt="sq-sample26"
-                    />
-                    <figcaption>
-                      <a
-                        href="assets/images/portfolio-03.jpg"
-                        data-lightbox="image-1"
-                        data-title="Caption"
-                        ><i class="fa fa-search"></i
-                      ></a>
-                      <h4>Boom Beach server emulator</h4>
-                      <span>Here is a screenshot from my server.</span>
-                    </figcaption>
-                  </figure>
-                </div>
-
-                <div class="isotope-item" data-type="bb">
-                  <figure class="snip1321">
-                    <img
-                      src="assets/images/portfolio-04.jpg"
-                      alt="sq-sample26"
-                    />
-                    <figcaption>
-                      <a
-                        href="assets/images/portfolio-04.jpg"
-                        data-lightbox="image-1"
-                        data-title="Caption"
-                        ><i class="fa fa-search"></i
-                      ></a>
-                      <h4>Debug Menu in Boom Beach</h4>
-                      <span>This is the hidden developer menu that I unlocked.</span>
-                    </figcaption>
-                  </figure>
-                </div>
-				
-                <div class="isotope-item" data-type="bs">
-                  <figure class="snip1321">
-                    <img
-                      src="assets/images/portfolio-05.jpg"
-                      alt="sq-sample26"
-                    />
-                    <figcaption>
-                      <a
-                        href="assets/images/portfolio-05.jpg"
-                        data-lightbox="image-1"
-                        data-title="Caption"
-                        ><i class="fa fa-search"></i
-                      ></a>
-                      <h4>Brawl Stars server emulator</h4>
-                      <span>Here is a screenshot from my server.</span>
-                    </figcaption>
-                  </figure>
-                </div>
-
-                <div class="isotope-item" data-type="bs">
-                  <figure class="snip1321">
-                    <img
-                      src="assets/images/portfolio-06.jpg"
-                      alt="sq-sample26"
-                    />
-                    <figcaption>
-                      <a
-                        href="assets/images/portfolio-06.jpg"
-                        data-lightbox="image-1"
-                        data-title="Caption"
-                        ><i class="fa fa-search"></i
-                      ></a>
-                      <h4>Debug Menu in Brawl Stars</h4>
-                      <span>This is the hidden developer menu that I unlocked.</span>
-                    </figcaption>
-                  </figure>
-                </div>				
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
     </div>
 
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <div class="window active" id="win-terminal" style="top: 60px; left: 40px; width: 580px; height: 380px; z-index: 20;">
+        <div class="title-bar" style="background: #333; border-bottom: 1px solid #000;">
+            <div class="window-controls">
+                <div class="control close" onclick="closeWindow('win-terminal')"></div>
+                <div class="control minimize" onclick="minimizeWindow('win-terminal')"></div>
+                <div class="control maximize"></div>
+            </div>
+            <div class="window-title" style="color: #bbb;">Terminal — bash — 80x24</div>
+        </div>
+        <div class="window-content">
+            <div class="output-section">
+                <span class="prompt">vitalii@macbook:~ $</span> <span class="cmd">./show_profile --role</span><br>
+                > C++ Developer | ARM Reverse Engineer<br>
+                > Passionate About Optimizing Performance and Security
+            </div>
 
-    <script src="assets/js/isotope.min.js"></script>
-    <script src="assets/js/owl-carousel.js"></script>
-    <script src="assets/js/lightbox.js"></script>
-    <script src="assets/js/custom.js"></script>
-    <script>
-      $(".main-menu li:first").addClass("active");
+            <div class="output-section">
+                <span class="prompt">vitalii@macbook:~ $</span> <span class="cmd">cat skills.txt</span><br>
+                <span class="highlight">[HARD SKILLS]</span><br>
+                * C++ Development (High Perf)<br>
+                * Reverse Engineering (x86 & ARM)<br>
+                * Malware Analysis & Assembly<br>
+                * Operations Research & Algorithms<br>
+                * Social Network Analysis<br>
+                <br>
+                <span class="highlight">[LANGUAGES]</span><br>
+                * Ukrainian (Native)<br>
+                * Russian (Native)<br>
+                * English (Full Professional)<br>
+                * German (Limited Working)
+            </div>
 
-      var showSection = function showSection(section, isAnimate) {
-        var direction = section.replace(/#/, ""),
-          reqSection = $(".section").filter(
-            '[data-section="' + direction + '"]'
-          ),
-          reqSectionPos = reqSection.offset().top - 0;
+            <div class="output-section">
+                <span class="prompt">vitalii@macbook:~ $</span> <span class="cmd">ping -c 1 linkedin.com</span><br>
+                REPLY from: <a href="https://www.linkedin.com/in/vitalii-strashnov" target="_blank" style="color:#33ff00;">linkedin.com/in/vitalii-strashnov</a><br>
+                <span class="prompt">vitalii@macbook:~ $</span> <span class="cursor">_</span>
+            </div>
+        </div>
+    </div>
 
-        if (isAnimate) {
-          $("body, html").animate(
-            {
-              scrollTop: reqSectionPos
-            },
-            800
-          );
-        } else {
-          $("body, html").scrollTop(reqSectionPos);
-        }
-      };
+    <div class="window" id="win-textedit" style="top: 100px; left: 450px; width: 450px; height: 400px; z-index: 10;">
+        <div class="title-bar">
+            <div class="window-controls">
+                <div class="control close" onclick="closeWindow('win-textedit')"></div>
+                <div class="control minimize" onclick="minimizeWindow('win-textedit')"></div>
+                <div class="control maximize"></div>
+            </div>
+            <div class="window-title">Summary.txt</div>
+        </div>
+        <div class="window-content">
+            <div class="paper-header">About Vitalii</div>
+            <p><strong>As a passionate C++ Developer and ARM Reverse Engineer</strong>, I specialize in optimizing performance and enhancing security in software development.</p>
+            <p>Currently pursuing a Bachelor's degree at the <strong>Odessa I.I. Mechnikov National University</strong>, I bring a strong academic foundation, complemented by my studies at <strong>University of Tübingen & Stanford University</strong>.</p>
+            <p>My expertise includes being a C++ developer with a cybersecurity direction and x86 & ARM reverse engineering, along with a keen interest in exploring cutting-edge advancements in these fields. Fluent in Ukrainian, Russian, and English, with working proficiency in German.</p>
+            <p>I am always eager to take on new challenges, contribute to innovative projects, and explore the intersections of cybersecurity, reverse engineering, and software optimization.</p>
+            <br>
+            <p style="color:#666; font-size: 12px;">Contact: mrkovalyskiy@gmail.com</p>
+        </div>
+    </div>
 
-      var checkSection = function checkSection() {
-        $(".section").each(function() {
-          var $this = $(this),
-            topEdge = $this.offset().top - 80,
-            bottomEdge = topEdge + $this.height(),
-            wScroll = $(window).scrollTop();
-          if (topEdge < wScroll && bottomEdge > wScroll) {
-            var currentId = $this.data("section"),
-              reqLink = $("a").filter("[href*=\\#" + currentId + "]");
-            reqLink
-              .closest("li")
-              .addClass("active")
-              .siblings()
-              .removeClass("active");
-          }
+    <div class="window metal" id="win-preview" style="top: 50px; left: 150px; width: 700px; height: 500px; z-index: 50; display: none;">
+        <div class="title-bar">
+            <div class="window-controls">
+                <div class="control close" onclick="closeWindow('win-preview')"></div>
+                <div class="control minimize" onclick="minimizeWindow('win-preview')"></div>
+                <div class="control maximize"></div>
+            </div>
+            <div class="window-title" id="preview-title">Preview</div>
+        </div>
+        <div class="window-content">
+            <img id="preview-img" src="" alt="Certificate Preview">
+        </div>
+    </div>
+
+<div class="window metal" id="win-game" style="top: 80px; left: 200px; width: 420px; height: 450px; z-index: 60; display: none;">
+        <div class="title-bar">
+            <div class="window-controls">
+                <div class="control close" onclick="closeWindow('win-game')"></div>
+                <div class="control minimize" onclick="minimizeWindow('win-game')"></div>
+                <div class="control maximize"></div>
+            </div>
+            <div class="window-title">Snake Byte</div>
+        </div>
+        <div class="window-content">
+            <div class="game-score">SCORE: <span id="score-val">0</span></div>
+            <canvas id="game-canvas" width="320" height="320"></canvas>
+            
+            <div class="game-overlay" id="game-start-screen">
+                <h2>SNAKE BYTE</h2>
+                <p>Use Arrow Keys to Move</p>
+                <p style="font-size: 10px; color: #aaa;">(Don't hit the walls!)</p>
+                <div class="game-btn" onclick="startGame()">START GAME</div>
+            </div>
+            <div class="game-overlay" id="game-over-screen" style="display: none;">
+                <h2 style="color: #ff5f57;">GAME OVER</h2>
+                <p>Score: <span id="final-score">0</span></p>
+                <div class="game-btn" onclick="startGame()">TRY AGAIN</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="window metal" id="win-finder" style="top: 160px; left: 100px; width: 640px; height: 400px; z-index: 15;">
+        <div class="title-bar">
+            <div class="window-controls">
+                <div class="control close" onclick="closeWindow('win-finder')"></div>
+                <div class="control minimize" onclick="minimizeWindow('win-finder')"></div>
+                <div class="control maximize"></div>
+            </div>
+            <div class="window-title">Finder - /Users/vitalii/Documents</div>
+        </div>
+        <div class="finder-body">
+            <div class="sidebar">
+                <div class="sidebar-title">DEVICES</div>
+                <div class="sidebar-item">💻 Macintosh HD</div>
+                <div class="sidebar-title">PLACES</div>
+                <div class="sidebar-item active">📁 Documents</div>
+                <div class="sidebar-item">📄 Applications</div>
+                <div class="sidebar-item">💿 Downloads</div>
+            </div>
+            <div class="finder-content">
+                <div class="file-icon">
+                    <div class="ico">🎓</div>
+                    <div class="name">Univ. of Tübingen</div>
+                </div>
+                <div class="file-icon">
+                    <div class="ico">🏛️</div>
+                    <div class="name">Mechnikov Univ.</div>
+                </div>
+                <div class="file-icon">
+                    <div class="ico">🌲</div>
+                    <div class="name">Stanford Univ.</div>
+                </div>
+                
+                <div class="file-icon" onclick="openPreview('https://s3.amazonaws.com/coursera_assets/meta_images/generated/CERTIFICATE_LANDING_PAGE/CERTIFICATE_LANDING_PAGE~WCVSN8SKOP14/CERTIFICATE_LANDING_PAGE~WCVSN8SKOP14.jpeg', 'Stanford Algorithms.jpg')">
+                    <div class="ico">📜</div>
+                    <div class="name">Stanford Algo.jpg</div>
+                </div>
+
+                <div class="file-icon" onclick="openPreview('https://s3.amazonaws.com/coursera_assets/meta_images/generated/CERTIFICATE_LANDING_PAGE/CERTIFICATE_LANDING_PAGE~3KNO407J7EO3/CERTIFICATE_LANDING_PAGE~3KNO407J7EO3.jpeg', 'IBM Malware Analysis.jpg')">
+                    <div class="ico">🛡️</div>
+                    <div class="name">Malware Analysis.jpg</div>
+                </div>
+
+                <div class="file-icon" onclick="openPreview('https://media.licdn.com/dms/image/v2/D4E2DAQHHHN9HszcBkQ/profile-treasury-image-shrink_1280_1280/profile-treasury-image-shrink_1280_1280/0/1732133498850?e=1764169200&v=beta&t=Nu_nOGI5l65LkjIbzZ_qPOHfCzbAV3axMFyr7U_7N-8', 'ICPC Contest.jpg')">
+                    <div class="ico">🏆</div>
+                    <div class="name">ICPC 2024.jpg</div>
+                </div>
+
+                <div class="file-icon" onclick="openPreview('https://media.licdn.com/dms/image/v2/D4E2DAQGsuFTU5XdY6A/profile-treasury-image-shrink_1280_1280/profile-treasury-image-shrink_1280_1280/0/1730292636694?e=1764169200&v=beta&t=Yc8W6Jdm21YcGxRkX2BPqqzkwddVlGYLAPQOrjwZ6Ho', 'Tuebingen CPP.jpg')">
+                    <div class="ico">🧩</div>
+                    <div class="name">C++ Prog.jpg</div>
+                </div>
+
+                <div class="file-icon" onclick="openGame()">
+                    <div class="ico">🐍</div>
+                    <div class="name">Snake.app</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="dock-container">
+        <div id="dock">
+<div class="dock-item running" onclick="activateWindow('win-finder')">
+                <img src="icons/finder.png" class="dock-icon-img">
+                <div class="dock-tooltip">Finder</div>
+                <div class="dock-dot"></div>
+            </div>
+
+            <div class="dock-item running" onclick="activateWindow('win-terminal')">
+                <img src="icons/terminal.png" class="dock-icon-img">
+                <div class="dock-tooltip">Terminal</div>
+                <div class="dock-dot"></div>
+            </div>
+
+            <div class="dock-item running" onclick="activateWindow('win-textedit')">
+                <img src="icons/textedit.png" class="dock-icon-img">
+                <div class="dock-tooltip">TextEdit</div>
+                <div class="dock-dot"></div>
+            </div>
+            <div class="dock-item" id="dock-preview" style="display:none;" onclick="activateWindow('win-preview')">
+                <img src="icons/preview.png" class="dock-icon-img">
+                <div class="dock-tooltip">Preview</div>
+                <div class="dock-dot"></div>
+            </div>
+            
+            <div style="width: 1px; height: 35px; background: rgba(255,255,255,0.3); margin: 0 5px;"></div>
+
+<div class="dock-item" id="dock-game" onclick="openGame()">
+                <img src="icons/game-center.png" class="dock-icon-img">
+                <div class="dock-tooltip">Snake Byte</div><div class="dock-dot"></div>
+            </div>
+            
+            <div class="dock-item" onclick="window.location.href='mailto:mrkovalyskiy@gmail.com'">
+                <img src="icons/mail.png" class="dock-icon-img">
+                <div class="dock-tooltip">Mail</div>
+            </div>
+            <div class="dock-item">
+                <img src="icons/trash.png" class="dock-icon-img">
+                <div class="dock-tooltip">Trash</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let maxZIndex = 100;
+    
+    function updateClock() {
+        const now = new Date();
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const day = days[now.getDay()];
+        let h = now.getHours();
+        let m = now.getMinutes();
+        m = m < 10 ? '0' + m : m;
+        document.getElementById('clock').innerText = `${day} ${h}:${m}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    let isDragging = false;
+    let currentWin = null;
+    let offset = { x:0, y:0 };
+    const windows = document.querySelectorAll('.window');
+
+    windows.forEach(win => {
+        const titleBar = win.querySelector('.title-bar');
+        win.addEventListener('mousedown', () => bringToFront(win));
+        titleBar.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            currentWin = win;
+            offset.x = e.clientX - win.offsetLeft;
+            offset.y = e.clientY - win.offsetTop;
+            bringToFront(win);
         });
-      };
+    });
 
-      $(".main-menu").on("click", "a", function(e) {
-        e.preventDefault();
-        showSection($(this).attr("href"), true);
-      });
+    document.addEventListener('mousemove', (e) => {
+        if(isDragging && currentWin) {
+            e.preventDefault();
+            currentWin.style.left = (e.clientX - offset.x) + 'px';
+            currentWin.style.top = (e.clientY - offset.y) + 'px';
+        }
+    });
+    document.addEventListener('mouseup', () => { isDragging = false; currentWin = null; });
 
-      $(window).scroll(function() {
-        checkSection();
-      });
-    </script>
-  </body>
+    function bringToFront(element) {
+        maxZIndex++;
+        element.style.zIndex = maxZIndex;
+        let appName = "Finder";
+        if(element.id === 'win-terminal') appName = "Terminal";
+        if(element.id === 'win-textedit') appName = "TextEdit";
+        if(element.id === 'win-preview') appName = "Preview";
+        if(element.id === 'win-game') appName = "Snake Byte";
+        document.getElementById('app-name').innerText = appName;
+        windows.forEach(w => w.classList.remove('active'));
+        element.classList.add('active');
+    }
+
+    window.closeWindow = function(id) {
+        const win = document.getElementById(id);
+        win.style.opacity = 0;
+        win.style.transform = 'scale(0.9)';
+        if(id === 'win-game') { stopGame(); document.getElementById('dock-game').classList.remove('running'); }
+        setTimeout(() => {
+            win.style.display = 'none';
+            if(id === 'win-preview') document.getElementById('dock-preview').style.display = 'none';
+        }, 200);
+    }
+    window.minimizeWindow = function(id) {
+        const win = document.getElementById(id);
+        win.style.transition = 'all 0.5s ease';
+        win.style.transform = 'scale(0.1) translate(0, 500px)';
+        win.style.opacity = 0;
+        if(id === 'win-game') isGamePaused = true;
+        setTimeout(() => win.style.display = 'none', 500);
+    }
+    window.activateWindow = function(id) {
+        const win = document.getElementById(id);
+        if(event && event.currentTarget) {
+             event.currentTarget.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-15px)' }, { transform: 'translateY(0)' }], { duration: 300 });
+        }
+        if(win.style.display === 'none') {
+            win.style.display = 'flex'; win.style.transform = 'scale(0.8)'; win.style.opacity = 0;
+            setTimeout(() => { win.style.transition = 'transform 0.2s, opacity 0.2s'; win.style.transform = 'scale(1)'; win.style.opacity = 1; }, 50);
+        }
+        if(id === 'win-game' && isGamePaused && gameRunning) { isGamePaused = false; requestAnimationFrame(gameLoop); }
+        bringToFront(win);
+    }
+
+    window.openPreview = function(url, title) {
+        const img = document.getElementById('preview-img');
+        const titleEl = document.getElementById('preview-title');
+        const dockItem = document.getElementById('dock-preview');
+        img.src = url; titleEl.innerText = title;
+        dockItem.style.display = 'flex'; dockItem.classList.add('running');
+        activateWindow('win-preview');
+    }
+
+    const canvas = document.getElementById('game-canvas');
+    const context = canvas.getContext('2d');
+    const grid = 16;
+    let count = 0;
+    let score = 0;
+    let gameRunning = false;
+    let isGamePaused = false;
+
+    let snake = { x: 160, y: 160, dx: grid, dy: 0, cells: [], maxCells: 4 };
+    let apple = { x: 320, y: 320 };
+
+    function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min)) + min; }
+
+    window.openGame = function() {
+        const dock = document.getElementById('dock-game');
+        dock.classList.add('running');
+        activateWindow('win-game');
+        if(!gameRunning) {
+            document.getElementById('game-start-screen').style.display = 'flex';
+            document.getElementById('game-over-screen').style.display = 'none';
+        }
+    }
+
+    window.startGame = function() {
+        document.getElementById('game-start-screen').style.display = 'none';
+        document.getElementById('game-over-screen').style.display = 'none';
+        snake = { x: 160, y: 160, dx: grid, dy: 0, cells: [], maxCells: 4 };
+        score = 0;
+        document.getElementById('score-val').innerText = score;
+        apple.x = getRandomInt(0, 20) * grid;
+        apple.y = getRandomInt(0, 20) * grid;
+        gameRunning = true; isGamePaused = false;
+        requestAnimationFrame(gameLoop);
+    }
+    window.stopGame = function() { gameRunning = false; }
+
+    function gameOver() {
+        gameRunning = false;
+        document.getElementById('final-score').innerText = score;
+        document.getElementById('game-over-screen').style.display = 'flex';
+    }
+
+    function gameLoop() {
+        if (!gameRunning || isGamePaused) return;
+
+        requestAnimationFrame(gameLoop);
+
+        if (++count < 8) return;
+        count = 0;
+
+        context.clearRect(0,0,canvas.width,canvas.height);
+
+        snake.x += snake.dx;
+        snake.y += snake.dy;
+
+        if (snake.x < 0 || snake.x >= canvas.width || snake.y < 0 || snake.y >= canvas.height) {
+            gameOver();
+            return;
+        }
+
+        snake.cells.unshift({x: snake.x, y: snake.y});
+        if (snake.cells.length > snake.maxCells) { snake.cells.pop(); }
+
+        context.fillStyle = '#ff5f57';
+        context.fillRect(apple.x, apple.y, grid-1, grid-1);
+
+        context.fillStyle = '#33ff00';
+        snake.cells.forEach(function(cell, index) {
+            context.fillRect(cell.x, cell.y, grid-1, grid-1);
+
+            if (cell.x === apple.x && cell.y === apple.y) {
+                snake.maxCells++;
+                score += 10;
+                document.getElementById('score-val').innerText = score;
+                apple.x = getRandomInt(0, 20) * grid;
+                apple.y = getRandomInt(0, 20) * grid;
+            }
+
+            for (var i = index + 1; i < snake.cells.length; i++) {
+                if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+                    gameOver();
+                }
+            }
+        });
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if(document.getElementById('win-game').classList.contains('active') && gameRunning) {
+            if([37, 38, 39, 40].indexOf(e.which) > -1) e.preventDefault();
+            if (e.which === 37 && snake.dx === 0) { snake.dx = -grid; snake.dy = 0; }
+            else if (e.which === 38 && snake.dy === 0) { snake.dy = -grid; snake.dx = 0; }
+            else if (e.which === 39 && snake.dx === 0) { snake.dx = grid; snake.dy = 0; }
+            else if (e.which === 40 && snake.dy === 0) { snake.dy = grid; snake.dx = 0; }
+        }
+    });
+</script>
+
+</body>
 </html>
