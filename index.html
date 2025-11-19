@@ -125,17 +125,27 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
 
-        #win-simulator { background: #2d2d2d; }
+        #win-simulator { 
+            background: #111; 
+            border-radius: 5px 5px 20px 20px; 
+        }
         #win-simulator .window-content {
-            display: flex; justify-content: center; align-items: center;
-            background: #1e1e1e; height: 100%; padding: 20px;
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start;
+            background: #111; 
+            height: 100%; 
+            padding: 0; 
+            overflow: hidden;
         }
         .iphone-frame {
-            width: 375px; height: 667px; /* iPhone SE/8 Ratio */
+            width: 100%; 
+            height: 100%; 
             background: #000;
-            border: 14px solid #111;
-            border-radius: 36px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.1);
+            border: 15px solid #111; 
+            box-sizing: border-box; 
+            border-top: none; 
+            border-radius: 0 0 20px 20px; 
             overflow: hidden;
             position: relative;
         }
@@ -602,9 +612,9 @@
         dock.classList.add('running');
         const iframe = document.getElementById('simulator-iframe');
         
-        if(!iframe.src || iframe.src === "" || iframe.src === "about:blank") {
+        //if(!iframe.src || iframe.src === "" || iframe.src === "about:blank") {
             iframe.src = "https://vitalikobject.github.io/iOS/index.html";
-        }
+        //}
         activateWindow('win-simulator');
     }
 
