@@ -121,15 +121,25 @@
 
         #win-terminal .window-content::-webkit-scrollbar,
         #win-textedit .window-content::-webkit-scrollbar,
-        #win-finder .finder-content::-webkit-scrollbar {
+        #win-finder .finder-content::-webkit-scrollbar,
+        #win-xcode .xcode-sidebar::-webkit-scrollbar,
+        #win-xcode .code-content::-webkit-scrollbar,
+        #win-xcode .console-output::-webkit-scrollbar,
+        #win-safari .window-content::-webkit-scrollbar {
             width: 15px;
+            height: 15px; 
             background: #f4f4f4;
             border-left: 1px solid #e0e0e0;
+            border-top: 1px solid #e0e0e0; 
         }
 
         #win-terminal .window-content::-webkit-scrollbar-thumb,
         #win-textedit .window-content::-webkit-scrollbar-thumb,
-        #win-finder .finder-content::-webkit-scrollbar-thumb {
+        #win-finder .finder-content::-webkit-scrollbar-thumb,
+        #win-xcode .xcode-sidebar::-webkit-scrollbar-thumb,
+        #win-xcode .code-content::-webkit-scrollbar-thumb,
+        #win-xcode .console-output::-webkit-scrollbar-thumb,
+        #win-safari .window-content::-webkit-scrollbar-thumb {
             border: 3px solid transparent;
             background-clip: content-box;
             border-radius: 9px;
@@ -143,7 +153,11 @@
 
         #win-terminal .window-content::-webkit-scrollbar-thumb:hover,
         #win-textedit .window-content::-webkit-scrollbar-thumb:hover,
-        #win-finder .finder-content::-webkit-scrollbar-thumb:hover {
+        #win-finder .finder-content::-webkit-scrollbar-thumb:hover,
+        #win-xcode .xcode-sidebar::-webkit-scrollbar-thumb:hover,
+        #win-xcode .code-content::-webkit-scrollbar-thumb:hover,
+        #win-xcode .console-output::-webkit-scrollbar-thumb:hover,
+        #win-safari .window-content::-webkit-scrollbar-thumb:hover {
             background-image: linear-gradient(to right, 
                 #b0d8ff 0%, 
                 #4da6ff 45%, 
@@ -152,7 +166,11 @@
 
         #win-terminal .window-content::-webkit-scrollbar-corner,
         #win-textedit .window-content::-webkit-scrollbar-corner,
-        #win-finder .finder-content::-webkit-scrollbar-corner {
+        #win-finder .finder-content::-webkit-scrollbar-corner,
+        #win-xcode .xcode-sidebar::-webkit-scrollbar-corner,
+        #win-xcode .code-content::-webkit-scrollbar-corner,
+        #win-xcode .console-output::-webkit-scrollbar-corner,
+        #win-safari .window-content::-webkit-scrollbar-corner {
             background: #f4f4f4;
         }
         #win-terminal a {
@@ -317,7 +335,6 @@
         .game-btn { margin-top: 20px; padding: 10px 20px; border: 1px solid #fff; cursor: pointer; transition: background 0.2s; }
         .game-btn:hover { background: rgba(255,255,255,0.2); }     
         
-        /* Xcode Styles */
         .xcode-toolbar {
             height: 55px;
             background: linear-gradient(to bottom, #e8e8e8 0%, #cfcfcf 100%);
@@ -444,6 +461,64 @@
         .code-content .cpp-type { color: #3e6d74; font-weight: bold; }
         .code-content .cpp-number { color: #1c00cf; }
         
+        .safari-toolbar {
+            height: 36px;
+            background: linear-gradient(to bottom, #e8e8e8 0%, #d0d0d0 100%);
+            border-bottom: 1px solid #a0a0a0;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            gap: 10px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .safari-btn {
+            width: 24px; height: 22px;
+            border: 1px solid #999;
+            border-radius: 3px;
+            background: linear-gradient(#fff, #e6e6e6);
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; color: #444; font-size: 12px;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        }
+        .safari-btn:active { background: #dcdcdc; box-shadow: inset 0 1px 2px rgba(0,0,0,0.2); }
+
+        .url-bar-container {
+            flex-grow: 2; position: relative;
+        }
+        .search-bar-container {
+            flex-grow: 1; position: relative; max-width: 200px;
+        }
+
+        .safari-input {
+            width: 100%; height: 22px;
+            border: 1px solid #888;
+            border-radius: 12px; 
+            padding: 0 10px;
+            font-size: 11px; font-family: "Lucida Grande", sans-serif;
+            outline: none;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+
+        .safari-iframe {
+            width: 100%; height: 100%; border: none; background: #fff;
+        }
+        #win-safari .window-content {
+            flex-grow: 1;        
+            height: 100%;         
+            padding: 0;           
+            overflow: hidden;     
+            display: flex;        
+            background: #fff;
+        }
+
+        .safari-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;       
+        }
     </style>
     <script type="text/javascript">
       var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -647,8 +722,37 @@
             </div>
         </div>
     </div>
-    
-<div class="window metal" id="win-xcode" style="top: 70px; left: 80px; width: 800px; height: 600px; z-index: 25; display: none;">
+
+    <div class="window metal" id="win-safari" style="top: 90px; left: 120px; width: 800px; height: 550px; z-index: 30; display: none;">
+        <div class="title-bar">
+            <div class="window-controls">
+                <div class="control close" onclick="closeWindow('win-safari')"></div>
+                <div class="control minimize" onclick="minimizeWindow('win-safari')"></div>
+                <div class="control maximize"></div>
+            </div>
+            <div class="window-title">Safari - Bing Search</div>
+        </div>
+        
+        <div class="safari-toolbar">
+            <div class="safari-btn" title="Back">◀</div>
+            <div class="safari-btn" title="Forward">▶</div>
+            <div class="safari-btn" title="Refresh" onclick="refreshSafari()">⟳</div>
+            
+            <div class="url-bar-container">
+                <input type="text" class="safari-input" id="safari-url" value="https://www.bing.com/search?q=Vitalii+Strashnov" onkeydown="if(event.key === 'Enter') navigateSafari(this.value)">
+            </div>
+            
+            <div class="search-bar-container">
+                <input type="text" class="safari-input" id="safari-search" placeholder="Bing Search" onkeydown="if(event.key === 'Enter') searchBing(this.value)">
+            </div>
+        </div>
+
+        <div class="window-content">
+            <iframe class="safari-iframe" id="safari-frame" src=""></iframe>
+        </div>
+    </div>
+
+    <div class="window metal" id="win-xcode" style="top: 70px; left: 80px; width: 800px; height: 600px; z-index: 25; display: none;">
         <div class="title-bar">
             <div class="window-controls">
                 <div class="control close" onclick="closeWindow('win-xcode')"></div>
@@ -726,7 +830,11 @@
                 <div class="dock-tooltip">Finder</div>
                 <div class="dock-dot"></div>
             </div>
-
+            <div class="dock-item" id="dock-safari" onclick="openSafari()">
+                <img src="icons/safari.png" class="dock-icon-img" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/5/52/Safari_browser_logo.png'">
+                <div class="dock-tooltip">Safari</div>
+                <div class="dock-dot"></div>
+            </div>
             <div class="dock-item" id="dock-xcode" onclick="openXcode()">
                 <img src="icons/xcode.png" class="dock-icon-img" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Xcode_icon.svg/1024px-Xcode_icon.svg.png'">
                 <div class="dock-tooltip">Xcode</div>
@@ -1334,7 +1442,52 @@ int main() {
     });
 </script>
 
+<script>
+function openSafari() {
+    const dock = document.getElementById('dock-safari');
+    const iframe = document.getElementById('safari-frame');
+    const urlInput = document.getElementById('safari-url');
 
+    dock.classList.add('running');
+    activateWindow('win-safari');
+    
+    //  if (!iframe.src || iframe.src === "about:blank" || iframe.src === window.location.href) {
+        navigateSafari('apple.com');
+    //}
+}
+
+function navigateSafari(url) {
+    const iframe = document.getElementById('safari-frame');
+    const urlInput = document.getElementById('safari-url');
+    
+    url = url.trim();
+
+    const cleanUrl = url.toLowerCase().replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '');
+
+    if (cleanUrl === 'apple.com') {
+        iframe.src = "https://vitalikobject.github.io/apple/index.html";
+        urlInput.value = "apple.com";
+        return;
+    }
+
+    if (!url.startsWith('http')) {
+        url = 'https://' + url;
+    }
+    
+    iframe.src = url;
+    urlInput.value = url;
+}
+
+function searchBing(query) {
+    if(!query) return;
+    const searchUrl = "https://www.bing.com/search?q=" + encodeURIComponent(query);
+    navigateSafari(searchUrl);
+}
+
+function refreshSafari() {
+    const iframe = document.getElementById('safari-frame');
+    iframe.src = iframe.src;
+}
 </script>
 </body>
 </html>
