@@ -4,6 +4,64 @@
     <meta charset="UTF-8">
     <title>Vitalii Strashnov - OS X Portfolio</title>
     <style>
+        #boot-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f0f0f0; 
+            z-index: 99999; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.7s ease-out, visibility 0.7s;
+        }
+
+        #boot-logo {
+            width: 80px;
+            height: auto;
+            opacity: 0.8;
+            margin-bottom: 80px;
+            filter: brightness(0.4); 
+        }
+
+        .spinner {
+            width: 30px;
+            height: 30px;
+            position: relative;
+        }
+
+        .spinner-blade {
+            position: absolute;
+            left: 44.5%;
+            top: 37%;
+            width: 10%;
+            height: 25%;
+            border-radius: 50%/20%;
+            animation: spinner-fade 1s linear infinite;
+            background-color: #888;
+        }
+
+        @keyframes spinner-fade {
+            0% { background-color: #333; }
+            100% { background-color: transparent; }
+        }
+
+        .spinner .blade-1 { transform: rotate(0deg) translate(0, -150%); animation-delay: -1s; }
+        .spinner .blade-2 { transform: rotate(30deg) translate(0, -150%); animation-delay: -0.9167s; }
+        .spinner .blade-3 { transform: rotate(60deg) translate(0, -150%); animation-delay: -0.8333s; }
+        .spinner .blade-4 { transform: rotate(90deg) translate(0, -150%); animation-delay: -0.75s; }
+        .spinner .blade-5 { transform: rotate(120deg) translate(0, -150%); animation-delay: -0.6667s; }
+        .spinner .blade-6 { transform: rotate(150deg) translate(0, -150%); animation-delay: -0.5833s; }
+        .spinner .blade-7 { transform: rotate(180deg) translate(0, -150%); animation-delay: -0.5s; }
+        .spinner .blade-8 { transform: rotate(210deg) translate(0, -150%); animation-delay: -0.4167s; }
+        .spinner .blade-9 { transform: rotate(240deg) translate(0, -150%); animation-delay: -0.3333s; }
+        .spinner .blade-10 { transform: rotate(270deg) translate(0, -150%); animation-delay: -0.25s; }
+        .spinner .blade-11 { transform: rotate(300deg) translate(0, -150%); animation-delay: -0.1667s; }
+        .spinner .blade-12 { transform: rotate(330deg) translate(0, -150%); animation-delay: -0.0833s; }
+        
         body, html {
             margin: 0;
             padding: 0;
@@ -531,9 +589,25 @@
     </script>    
 </head>
 <body>
-
-<div id="desktop">
+<div id="boot-screen">
+    <img src="icons/apple.png" id="boot-logo" alt="Apple">
     
+    <div class="spinner">
+        <div class="spinner-blade blade-1"></div>
+        <div class="spinner-blade blade-2"></div>
+        <div class="spinner-blade blade-3"></div>
+        <div class="spinner-blade blade-4"></div>
+        <div class="spinner-blade blade-5"></div>
+        <div class="spinner-blade blade-6"></div>
+        <div class="spinner-blade blade-7"></div>
+        <div class="spinner-blade blade-8"></div>
+        <div class="spinner-blade blade-9"></div>
+        <div class="spinner-blade blade-10"></div>
+        <div class="spinner-blade blade-11"></div>
+        <div class="spinner-blade blade-12"></div>
+    </div>
+</div>
+<div id="desktop">
     <div id="menubar">
         <div class="menu-left">
             <div class="apple-logo">
@@ -732,7 +806,7 @@
                 <div class="control minimize" onclick="minimizeWindow('win-safari')"></div>
                 <div class="control maximize"></div>
             </div>
-            <div class="window-title">Safari - Bing Search</div>
+            <div class="window-title">Safari</div>
         </div>
         
         <div class="safari-toolbar">
@@ -1490,6 +1564,22 @@ function refreshSafari() {
     const iframe = document.getElementById('safari-frame');
     iframe.src = iframe.src;
 }
+</script>
+<script>
+window.onload = function() {
+        // Эта функция сработает только когда ВСЕ картинки и стили загрузятся
+        const bootScreen = document.getElementById('boot-screen');
+        
+        // Небольшая задержка для плавности (чтобы не мелькнуло слишком быстро)
+        setTimeout(() => {
+            bootScreen.style.opacity = '0'; // Плавное исчезновение
+            
+            // Полностью убираем элемент из потока после завершения анимации
+            setTimeout(() => {
+                bootScreen.style.display = 'none';
+            }, 700); // Время должно совпадать с transition в CSS
+        }, 1000); // Минимальное время показа (1 секунда), можно убрать если не нужно
+    };
 </script>
 </body>
 </html>
