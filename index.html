@@ -1546,6 +1546,12 @@ function navigateSafari(url) {
         return;
     }
 
+    if (cleanUrl === 'youtube.com') {
+        iframe.src = "https://vitalikobject.github.io/web/youtube/index.html";
+        urlInput.value = "youtube.com";
+        return;
+    }    
+
     const ytMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
 
     if (ytMatch && ytMatch[1]) {
