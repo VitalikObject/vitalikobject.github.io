@@ -1567,18 +1567,15 @@ function refreshSafari() {
 </script>
 <script>
 window.onload = function() {
-        // Эта функция сработает только когда ВСЕ картинки и стили загрузятся
         const bootScreen = document.getElementById('boot-screen');
         
-        // Небольшая задержка для плавности (чтобы не мелькнуло слишком быстро)
         setTimeout(() => {
-            bootScreen.style.opacity = '0'; // Плавное исчезновение
+            bootScreen.style.opacity = '0';
             
-            // Полностью убираем элемент из потока после завершения анимации
             setTimeout(() => {
                 bootScreen.style.display = 'none';
-            }, 700); // Время должно совпадать с transition в CSS
-        }, 1000); // Минимальное время показа (1 секунда), можно убрать если не нужно
+            }, 700); 
+        }, 1000); 
     };
 </script>
 </body>
