@@ -1541,8 +1541,17 @@ function navigateSafari(url) {
     const cleanUrl = url.toLowerCase().replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '');
 
     if (cleanUrl === 'apple.com') {
-        iframe.src = "https://vitalikobject.github.io/apple/index.html";
+        iframe.src = "https://vitalikobject.github.io/web/apple/index.html";
         urlInput.value = "apple.com";
+        return;
+    }
+
+    const ytMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
+
+    if (ytMatch && ytMatch[1]) {
+        const videoId = ytMatch[1];       
+        urlInput.value = url;        
+        iframe.src = `https://vitalikobject.github.io/web/youtube/index.html?v=${videoId}`;
         return;
     }
 
